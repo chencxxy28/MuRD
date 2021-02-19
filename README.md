@@ -1,3 +1,7 @@
-# MuRD
+---
+output: github_document
+---
 
-add website
+# Add a title
+  
+Explain what your package is doing here
