@@ -1,0 +1,20 @@
+Package: MuRD
+Type: Package
+Title: Multi-robust deconvolution algorithm
+Version: 0.0.1
+Author: Chixiang Chen <chixiang.chen@pennmedicine.upenn.edu>
+Maintainer: Chixiang Chen <chixiang.chen@pennmedicine.upenn.edu>
+Description: MuRD adopts a penalized regression scheme to incorporate multiple information into the deconvolution process of bulk RNA-seq data. The resulting algorithm is robust against incorrect marker genes, incorrect reference data, and incorrect extra information about the target bulk data (e.g., population-level cell proportions).  
+License: Artistic-2.0
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+URL: https://github.com/meichendong/SCDC
+BugReports: https://github.com/meichendong/SCDC/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Imports: Rcpp (>= 0.11.0), L1pack, Biobase, limSolve, xbioc, cowplot, ggplot2, pheatmap, SCDC, stats,DescTools, mgcv, reshape2
+LinkingTo: Rcpp
+Depends: R (>= 3.5.0)
