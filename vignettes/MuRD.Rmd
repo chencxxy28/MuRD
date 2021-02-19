@@ -1,6 +1,6 @@
 ---
 title: "MuRD"
-output: rmarkdown::html_vignette
+output: html_document
 vignette: >
   %\VignetteIndexEntry{MuRD}
   %\VignetteEngine{knitr::rmarkdown}
