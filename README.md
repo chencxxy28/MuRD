@@ -10,9 +10,7 @@ output: github_document
 You can install the released version of MuRD with:
 ```
 #install devtools if necessary
-if (!require("devtools")) {
-  install.packages("devtools")
-}
+install.packages("devtools")
 
 #install the MuRD package
 devtools::install_github("chencxxy28/MuRD")
