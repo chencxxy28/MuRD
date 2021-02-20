@@ -65,11 +65,29 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="add-a-title" class="section level1">
+
+<div id="murd-multi-robust-cell-type-deconvolution-of-bulk-rna-sequencing-data-via-integrating-information-from-single-cell-reference-and-external-expression-data" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#add-a-title" class="anchor"></a>Add a title</h1></div>
-<p>Explain what your package is doing here</p>
+<a href="#murd-multi-robust-cell-type-deconvolution-of-bulk-rna-sequencing-data-via-integrating-information-from-single-cell-reference-and-external-expression-data" class="anchor"></a>MuRD: Multi-Robust Cell-type Deconvolution of Bulk RNA Sequencing Data via Integrating Information from Single-cell Reference and External Expression Data</h1></div>
+<p><strong>MuRD</strong> unifies multiple deconvolution schemes to infer cell type proportions from the target bulk RNA-seq data. Three unique features are embraced in this algorithm: first, <strong>MuRD</strong> is able to incorporate extra biological information from external data sources enables (e.g., scRNA_seq and other bulk RNA_seq data from independent studies); second, <strong>MuRD</strong> calibrates the reference-free algorithm by taking into account the proportion estimates from a reference-based approach; third, <strong>MuRD</strong> is robust to incorrect information from any of the provided data sources.</p>
 </div>
+<div id="installation" class="section level1">
+<h1 class="hasAnchor">
+<a href="#installation" class="anchor"></a>Installation</h1>
+<p>You can install the released version of MuRD with:</p>
+<pre><code>#install devtools if necessary
+if (!require("devtools")) {
+  install.packages("devtools")
+}
+
+#install the MuRD package
+devtools::install_github("chencxxy28/MuRD")
+
+#load
+library(MuRD)</code></pre>
+<p>#Vignettes Please visit <a href="https://chencxxy28.github.io/MuRD/" class="external-link">Tutorial</a>.</p>
+</div>
+
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
