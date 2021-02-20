@@ -18,5 +18,4 @@ VignetteBuilder: knitr
 Imports: Rcpp (>= 0.11.0), L1pack, Biobase, limSolve, xbioc, cowplot, ggplot2, pheatmap, SCDC, stats,DescTools, mgcv, reshape2
 LinkingTo: Rcpp
 Depends: R (>= 3.5.0)
-Remotes: 
-        renozao/xbioc
+Remotes: renozao/xbioc
