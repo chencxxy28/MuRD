@@ -134,11 +134,11 @@
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">c_ave_est</span></code></pre></div>
 <pre><code>##      alpha       beta      delta      gamma 
-## 0.60683617 0.23585368 0.08774786 0.06956229</code></pre>
+## 0.60617872 0.23603323 0.08822580 0.06956226</code></pre>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">w_ave_est</span></code></pre></div>
 <pre><code>##       alpha        beta       delta       gamma 
-## 0.937102260 0.044816807 0.003727395 0.014353538</code></pre>
+## 0.893160143 0.020098938 0.007843283 0.078897635</code></pre>
 <p>Finally, we integrate all information into MuRD algorithm to conduct deconvolution for the <em>pseudo bulk</em> data. For illustration, we focus on the case with wrong marker genes (W), wrong subject-level proportions (W), and correct population-level mean proportions (R). The function <code><a href="../reference/MuRD.onegroup.html">MuRD.onegroup()</a></code> will return a list containing estimated cell type proportions corresponding to each tuning value (<code>est.prop</code>) and a sequence of goodness-of-fit values corresponding to each tuning value (<code>metrics</code>). The smaller the better.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">MuRD.object</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/MuRD.onegroup.html">MuRD.onegroup</a></span><span class="op">(</span>bulk.data<span class="op">=</span><span class="va">pseudo.seger</span><span class="op">[[</span><span class="st">"pseudo_eset"</span><span class="op">]</span><span class="op">]</span>,list.marker<span class="op">=</span><span class="va">w_list_marker</span>,celltype.unique<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha"</span>,<span class="st">"beta"</span>,<span class="st">"delta"</span>,<span class="st">"gamma"</span><span class="op">)</span>,subject.level.proportion<span class="op">=</span><span class="va">w_refbase_est</span>,population.level.proportion<span class="op">=</span><span class="va">c_ave_est</span><span class="op">)</span></code></pre></div>
@@ -148,15 +148,15 @@
 <span class="va">reffree.est</span> <span class="op">=</span> <span class="fu"><a href="../reference/reffree.predict.prop.html">reffree.predict.prop</a></span><span class="op">(</span>murd.output<span class="op">=</span><span class="va">MuRD.object</span><span class="op">)</span>
 <span class="fu"><a href="../reference/evaluate.html">evaluate</a></span><span class="op">(</span><span class="va">MuRD.est</span>,<span class="va">pseudo.seger</span><span class="op">$</span><span class="va">true_p</span><span class="op">)</span><span class="op">$</span><span class="va">all.eva</span></code></pre></div>
 <pre><code>##      all.mad   all.ccc   all.cor
-## 1 0.05057331 0.2275803 0.6944681</code></pre>
+## 1 0.05077932 0.2265825 0.6944258</code></pre>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/evaluate.html">evaluate</a></span><span class="op">(</span><span class="va">reffree.est</span>,<span class="va">pseudo.seger</span><span class="op">$</span><span class="va">true_p</span><span class="op">)</span><span class="op">$</span><span class="va">all.eva</span></code></pre></div>
 <pre><code>##     all.mad   all.ccc   all.cor
 ## 1 0.1871329 0.0578328 0.6236459</code></pre>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/evaluate.html">evaluate</a></span><span class="op">(</span><span class="va">w_refbase_est</span>,<span class="va">pseudo.seger</span><span class="op">$</span><span class="va">true_p</span><span class="op">)</span><span class="op">$</span><span class="va">all.eva</span></code></pre></div>
-<pre><code>##     all.mad     all.ccc   all.cor
-## 1 0.1579653 0.004388256 0.1302759</code></pre>
+<pre><code>##     all.mad    all.ccc   all.cor
+## 1 0.1413312 0.02907685 0.1222001</code></pre>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/hadley/reshape" class="external-link">reshape2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
