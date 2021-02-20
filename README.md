@@ -22,5 +22,5 @@ library(MuRD)
 ```
 
 #Vignettes
-Please visit [Tutorial](https://chencxxy28.github.io/MuRD/).
+Please visit [Tutorial](https://chencxxy28.github.io/MuRD/articles/MuRD.html).
 
