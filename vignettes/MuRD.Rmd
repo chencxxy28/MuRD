@@ -24,7 +24,10 @@ library(MuRD)
 ## Simulation Studies
 First, read in scRNA-seq data downloaded from our website 
 ```{r}
-#library(SCDC)
+readRDSFromWeb <- function(ref) {
+  readRDS(gzcon(url(ref)))
+}
+
 seger <- readRDS("data/segerstolpe.rds")
 baron <- readRDS("data/baron.rds")
 xin<-readRDS("data/Xin_nonD.rds")
