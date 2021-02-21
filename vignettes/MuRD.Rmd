@@ -30,6 +30,7 @@ devtools::install_github("meichendong/SCDC")
 
 
 ```{r}
+#load
 library(MuRD)
 library(SCDC)
 ```
