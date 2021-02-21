@@ -95,6 +95,10 @@ devtools::install_github("chencxxy28/MuRD")
 
 #load
 library(MuRD)</a></code></pre>
+<p>If <a href="https://bioconductor.org/packages/release/bioc/html/Biobase.html" class="external-link"><em>Biobase</em></a> package is not available, please install it first before installation of <strong>MuRD</strong></p>
+<pre><code>if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("Biobase")</code></pre>
 <p>#Vignettes Please visit <a href="https://chencxxy28.github.io/MuRD/articles/MuRD.html" class="external-link">Tutorial</a>.</p>
 </div>
 
