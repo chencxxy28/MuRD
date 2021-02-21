@@ -3,6 +3,6 @@ pkgdown: 1.6.1.9000
 pkgdown_sha: 1ca166905f1b019ed4af9642617ea09fa2b8fc17
 articles:
   MuRD: MuRD.html
-  data: data.html
-last_built: 2021-02-21T01:07Z
+  web/data: data.html
+last_built: 2021-02-21T02:13Z
 
