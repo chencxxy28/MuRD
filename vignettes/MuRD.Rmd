@@ -19,15 +19,11 @@ library(MuRD)
 ```
 
 ## Data Input
-**MuRD** deconvolutes raw read counts data which is in `ExpressionSet` objects based on the package [_Biobase_](https://bioconductor.org/packages/release/bioc/html/Biobase.html). As an illustration of the **MuRD** framework, we conduct both simulation studies and real data analysis based on pancreatic islet data from [Fadista et al. (2014)](https://www.pnas.org/content/111/38/13924) as presented in our paper. Three public scRNA-seq datasets from [Baron et al. (2016)](https://www.sciencedirect.com/science/article/pii/S2405471216302666?via%3Dihub), [Segerstolpe et al. (2016)](https://www.sciencedirect.com/science/article/pii/S1550413116304363?via%3Dihub) and [Xin et al. (2016)](https://www.sciencedirect.com/science/article/pii/S155041311630434X?via%3Dihub) are used. The processed data are available at the ... 
+**MuRD** deconvolutes raw read counts data which is in `ExpressionSet` objects based on the package [_Biobase_](https://bioconductor.org/packages/release/bioc/html/Biobase.html). As an illustration of the **MuRD** framework, we conduct both simulation studies and real data analysis based on pancreatic islet data from [Fadista et al. (2014)](https://www.pnas.org/content/111/38/13924) as presented in our paper. Three public scRNA-seq datasets from [Baron et al. (2016)](https://www.sciencedirect.com/science/article/pii/S2405471216302666?via%3Dihub), [Segerstolpe et al. (2016)](https://www.sciencedirect.com/science/article/pii/S1550413116304363?via%3Dihub) and [Xin et al. (2016)](https://www.sciencedirect.com/science/article/pii/S155041311630434X?via%3Dihub) are used. The processed data are available at the [data download](https://chencxxy28.github.io/MuRD/articles/web/data.html)
 
 ## Simulation Studies
 First, read in scRNA-seq data downloaded from our website 
 ```{r}
-readRDSFromWeb <- function(ref) {
-  readRDS(gzcon(url(ref)))
-}
-
 seger <- readRDS("data/segerstolpe.rds")
 baron <- readRDS("data/baron.rds")
 xin<-readRDS("data/Xin_nonD.rds")
@@ -43,7 +39,7 @@ pseudo.seger<-generateBulk(seger[["sc.eset.qc"]], ct.varname = "cluster", sample
 
 The generated _pseudo bulk_ object contains a matrix of true cell type proportions (`pseudo.seger$truep`) and the `ExpressionSet` object (`pseudo.seger$pseudo_eset`).
 
-MuRD algorithm takes as input the target bulk data, subject-level cell type proportions from reference-based approach, and population-level cell type proportions. For illustration, we use the function `SCDC_prop()` from SCDC package ([Dong et al. (2021)](https://academic.oup.com/bib/article/22/1/416/5699815)). We regard the estimated cell type proportions from [Segerstolpe et al. (2016)](https://www.sciencedirect.com/science/article/pii/S1550413116304363?via%3Dihub) as the correct subject-level cell type information (`c_refbase_est`) and the estimated ones with subject-label shuffle from [Xin et al. (2016)](https://www.sciencedirect.com/science/article/pii/S155041311630434X?via%3Dihub) as the incorrect information (`w_refbase_est`).
+MuRD algorithm takes as input the target bulk data, subject-level cell type proportions from reference-based approach, and population-level cell type proportions. For illustration, we use the function `SCDC_prop()` from SCDC package ([Dong et al. (2021)](https://academic.oup.com/bib/article/22/1/416/5699815)). We regard the estimated cell type proportions from [Segerstolpe et al. (2016)](https://www.sciencedirect.com/science/article/pii/S1550413116304363?via%3Dihub) as the correct subject-level cell type information (`c_refbase_est`) and the estimated ones with subject-label shuffle from [Xin et al. (2016)](https://www.sciencedirect.com/science/article/pii/S155041311630434X?via%3Dihub) as the incorrect information (`w_refbase_est`). 
 
 ```{r, message=FALSE,results='hide'}
 library(SCDC)
@@ -65,7 +61,7 @@ evaluate(c_refbase_est,pseudo.seger$true_p)$all.eva
 evaluate(w_refbase_est,pseudo.seger$true_p)$all.eva
 ```
 
-We can obtain population-level mean proportions, with the one using [Segerstolpe et al. (2016)](https://www.sciencedirect.com/science/article/pii/S1550413116304363?via%3Dihub) as correct (`c_ave_est`) and the one using [Xin et al. (2016)](https://www.sciencedirect.com/science/article/pii/S155041311630434X?via%3Dihub) as incorrect (`w_ave_est`). The function `pop.ct.prop.subj()` is used to extract such information given subject-level proportions. We also provide the true mean proportions (`true_ave`) from the target pseudo bulk samples. Besides, MuRD also requires a list of prespecified marker genes, which could be selected from external scRNA-seq data based on pre-defined expression threshold, prior biological knowledge, or information reported in literature. The list of correct markers (`cmarkers.rds`) and the list of wrong markers (`wmarkers.rds`) for this simulation study are available in files `cmarkers.rds` and `wmarkers.rds`, respectively.
+We can obtain population-level mean proportions, with the one using [Segerstolpe et al. (2016)](https://www.sciencedirect.com/science/article/pii/S1550413116304363?via%3Dihub) as correct (`c_ave_est`) and the one using [Xin et al. (2016)](https://www.sciencedirect.com/science/article/pii/S155041311630434X?via%3Dihub) as incorrect (`w_ave_est`). The function `pop.ct.prop.subj()` is used to extract such information given subject-level proportions. We also provide the true mean proportions (`true_ave`) from the target pseudo bulk samples. Besides, MuRD also requires a list of prespecified marker genes, which could be selected from external scRNA-seq data based on pre-defined expression threshold, prior biological knowledge, or information reported in literature. The list of correct markers (`cmarkers.rds`) and the list of wrong markers (`wmarkers.rds`) for this simulation study are available in files `cmarkers.rds` and `wmarkers.rds` at [data download](https://chencxxy28.github.io/MuRD/articles/web/data.html), respectively.
 
 ```{r, message=FALSE}
 c_list_marker = readRDS("data/cmarkers.rds") #may write a function for selecting marker genes
@@ -87,7 +83,7 @@ Finally, we integrate all information into MuRD algorithm to conduct deconvoluti
 MuRD.object<-MuRD.onegroup(bulk.data=pseudo.seger[["pseudo_eset"]],list.marker=w_list_marker,celltype.unique=c("alpha","beta","delta","gamma"),subject.level.proportion=w_refbase_est,population.level.proportion=c_ave_est)
 ```
 
-The function `MuRD.predict.props()` helps extract the recovered cell type proportions via MuRD; the function `reffree.predict.prop()` helps extract the estimated proportions via reference-free approach. We use the function `evaluate` to assess the performance of estimated proportions versus the true proportions based on MAD, CCC, and Pearson. We also provide the visualization via a dot plot using MAD and CCC. The following results show that our method (named MuRD) has smaller MAD and higher CCC and Pearson than other methods even when misleading infomration is used.
+The function `MuRD.predict.props()` helps extract the recovered cell type proportions via MuRD; the function `reffree.predict.prop()` helps extract the estimated proportions via reference-free approach. We use the function `evaluate` to assess the performance of estimated proportions versus the true proportions based on MAD, CCC, and Pearson. We also provide the visualization via a dot plot using MAD and CCC. The following results show that our method (named MuRD) has smaller MAD and higher CCC and Pearson than other methods even when misleading information is used.
 
 ```{r, message=FALSE}
 MuRD.est = MuRD.predict.prop(murd.output=MuRD.object)
@@ -131,7 +127,7 @@ prop_est = prop_est[match(colnames(fadista_77),rownames(prop_est)),]
 comb_sample = prop_est
 ```
 
-Next, to obtain the population-level mean proportions, we applied SCDC-ENSEMBLE again to the external bulk expression data from [Bunt et al. (2015)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1005694) and then averaged subject-level proportions for each cell type (Not run). 
+Next, to obtain the population-level mean proportions, we applied SCDC-ENSEMBLE again to the external bulk expression data from [Bunt et al. (2015)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1005694) at [data download](https://chencxxy28.github.io/MuRD/articles/web/data.html) and then averaged subject-level proportions for each cell type (Not run). 
 
 ```{r, message=FALSE,eval=FALSE}
 Bunt <- readRDS("data/Bunt.rds")
@@ -142,13 +138,13 @@ prop_est_bunt<-wt_prop(bunt.ens$w_table[7,1:2], proplist = bunt.ens$prop.only)
 ave_est = pop.ct.prop.subj(prop_est_bunt)
 ```
 
-The code above may take a long time to run. We have provided the estimated cell-type proportions, named `prop_est_bunt.rds`. We can directly use the estimates to calculate population-level mean proportions.
+The code above may take a long time to run. We have provided the estimated cell-type proportions, named `prop_est_bunt.rds` at [data download](https://chencxxy28.github.io/MuRD/articles/web/data.html). We can directly use the estimates to calculate population-level mean proportions.
 ```{r, message=FALSE,results='hide'}
 prop_est_bunt = readRDS("data/prop_est_bunt.rds")
 ave_est = pop.ct.prop.subj(prop_est_bunt)
 ```
 
-Finally, given a list of pre-specified marker genes, named `fad_list_marker.rds` , we applied MuRD algorithm to conduct deconvolution. To allow the potentially different gene expression patterns between the cases and controls, we implemented ENSEMBLE procedures for the samples from the two classes separately (may take 5-10 minutes). 
+Finally, given a list of pre-specified marker genes, named `fad_list_marker.rds` available at [data download](https://chencxxy28.github.io/MuRD/articles/web/data.html), we applied MuRD algorithm to conduct deconvolution. To allow the potentially different gene expression patterns between the cases and controls, we implemented ENSEMBLE procedures for the samples from the two classes separately (may take 5-10 minutes). 
 
 ```{r, message=FALSE, results='hide'}
 #read the list of marker genes
