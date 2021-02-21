@@ -13,20 +13,24 @@ knitr::opts_chunk$set(echo = TRUE)
 **MuRD** unifies multiple deconvolution schemes to infer cell type proportions from the target bulk RNA-seq data. Three unique features are embraced in this algorithm: first, **MuRD** is able to incorporate extra biological information from external data sources enables (e.g., scRNA_seq and other bulk RNA_seq data from independent studies); second, **MuRD** calibrates the reference-free algorithm by taking into account the proportion estimates from a reference-based approach; third, **MuRD** is robust to incorrect information from any of the provided data sources.
 
 ## Installation
-```{r}
+```{r,eval=FALSE}
 if (!require("devtools")) {
   install.packages("devtools")
 }
 devtools::install_github("chencxxy28/MuRD")
-library(MuRD)
 ```
 
 In this tutorial, we use SCDC ([Dong et al. (2021)](https://academic.oup.com/bib/article/22/1/416/5699815)) to conduct reference-based deconvolution for illustration. The package can be installed by the code
-```{r}
+```{r,eval=FALSE}
 if (!require("devtools")) {
   install.packages("devtools")
 }
 devtools::install_github("meichendong/SCDC")
+```
+
+
+```{r}
+library(MuRD)
 library(SCDC)
 ```
 
