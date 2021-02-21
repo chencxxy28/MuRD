@@ -3,21 +3,21 @@ title: "Data download"
 output: html_document
 ---
 
-- [Baron et al. scRNA-seq](https://github.com/chencxxy28/MuRD/blob/master/vignettes/data/baron.rds)
+* [Baron et al. scRNA-seq](https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/baron.rds)
 
-- [Segerstolpe et al. scRNA-seq](https://github.com/chencxxy28/MuRD/blob/master/vignettes/data/segerstolpe.rds)
+* [Segerstolpe et al. scRNA-seq](https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/segerstolpe.rds)
 
-- [Xin et al. scRNA-seq](https://github.com/chencxxy28/MuRD/blob/master/vignettes/data/Xin_nonD.rds)
+* [Xin et al. scRNA-seq](https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/Xin_nonD.rds)
 
-- [Correct list of marker genes for simulation](https://github.com/chencxxy28/MuRD/blob/master/vignettes/data/cmarkers.rds)
+* [Correct list of marker genes for simulation](https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/cmarkers.rds)
 
-- [Wrong list of marker genes for simulation](https://github.com/chencxxy28/MuRD/blob/master/vignettes/data/wmarkers.rds)
+* [Wrong list of marker genes for simulation](https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/wmarkers.rds)
 
-- [Fadista et al. bulk RNA-seq data](https://github.com/chencxxy28/MuRD/blob/master/vignettes/data/fadista_77.rds)
+* [Fadista et al. bulk RNA-seq data](https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/fadista_77.rds)
 
-- [Bunt et al. bulk RNA-seq data](https://github.com/chencxxy28/MuRD/blob/master/vignettes/data/Bunt.rds)
+* [Bunt et al. bulk RNA-seq data](https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/Bunt.rds)
 
-- [Population-level mean proportion from Bunt et al.](https://github.com/chencxxy28/MuRD/blob/master/vignettes/data/prop_est_bunt.rds)
+* [Population-level mean proportion from Bunt et al.](https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/prop_est_bunt.rds)
 
-- [Pre-specified marker genes for Fadista et al. Bulk data](https://github.com/chencxxy28/MuRD/blob/master/vignettes/data/fad_list_marker.rds)
+* [Pre-specified marker genes for Fadista et al. Bulk data](https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/fad_list_marker.rds)
 
