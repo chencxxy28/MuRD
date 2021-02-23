@@ -1,1 +1,17 @@
+title: MuRD
+url: https://chencxxy28.github.io/MuRD/
+template:
+  params:
+    bootswatch: cosmo
 
+navbar:
+  type: inverse
+  left:
+    - icon: fa-home
+      href: index.html
+    - text: "Vignettes"
+      href: articles/MuRD.html
+    - text: "References"
+      href: reference/index.html
+    - text: "Data"
+      href: articles/web/data.html
