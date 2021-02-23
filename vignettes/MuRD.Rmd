@@ -1,6 +1,6 @@
 ---
 title: "MuRD"
-output: html_document
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{MuRD}
   %\VignetteEngine{knitr::rmarkdown}
@@ -20,7 +20,7 @@ if (!require("devtools")) {
 devtools::install_github("chencxxy28/MuRD")
 ```
 
-In this tutorial, we use SCDC ([Dong et al. (2021)](https://academic.oup.com/bib/article/22/1/416/5699815)) to conduct reference-based deconvolution for illustration. The package can be installed by the code
+In this tutorial, we use SCDC ([Dong et al. (2021)](https://academic.oup.com/bib/article/22/1/416/5699815)) for illustration to conduct reference-based deconvolution. The package can be installed by the code
 ```{r,eval=FALSE}
 if (!require("devtools")) {
   install.packages("devtools")
@@ -39,11 +39,14 @@ library(SCDC)
 **MuRD** deconvolutes raw read counts data which is in `ExpressionSet` objects based on the package [_Biobase_](https://bioconductor.org/packages/release/bioc/html/Biobase.html). As an illustration of the **MuRD** framework, we conduct both simulation studies and real data analysis based on pancreatic islet data from [Fadista et al. (2014)](https://www.pnas.org/content/111/38/13924) as presented in our paper. Three public scRNA-seq datasets from [Baron et al. (2016)](https://www.sciencedirect.com/science/article/pii/S2405471216302666?via%3Dihub), [Segerstolpe et al. (2016)](https://www.sciencedirect.com/science/article/pii/S1550413116304363?via%3Dihub) and [Xin et al. (2016)](https://www.sciencedirect.com/science/article/pii/S155041311630434X?via%3Dihub) are used. For simulations, we have a pre-specified [correct](https://github.com/chencxxy28/MuRD/blob/master/vignettes/data/cmarkers.rds) and [incorrect](https://github.com/chencxxy28/MuRD/blob/master/vignettes/data/wmarkers.rds) marker genes; for real data application, we have an expression dataset from [Bunt et al. (2015)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1005694) and pre-selected list of [marker genes](https://github.com/chencxxy28/MuRD/blob/master/vignettes/data/fad_list_marker.rds). All processed data are available at the [data download](https://chencxxy28.github.io/MuRD/articles/web/data.html).
 
 ## Simulation Studies
-First, read in scRNA-seq data downloaded from our website 
+First, read in scRNA-seq data from our website 
 ```{r}
-seger <- readRDS("data/segerstolpe.rds")
-baron <- readRDS("data/baron.rds")
-xin<-readRDS("data/Xin_nonD.rds")
+readRDSFromWeb <- function(ref) {
+  readRDS(gzcon(url(ref)))
+}
+seger <- readRDSFromWeb("https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/segerstolpe.rds")
+baron <- readRDSFromWeb("https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/baron.rds")
+xin<-readRDSFromWeb("https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/Xin_nonD.rds")
 ```
 
 Second, use function `generateBulk()` to create the _pseudo bulk_ samples, where `ct.varname` specifies the name of cell type clustering result variable. `sample` specifies the name of subjects information variable. `ct.sub` specifies the names of cell types used to construct _pseudo bulk_ samples. Here we provide an example where the _pseudo bulk_ samples are generated from [Segerstolpe et al. (2016)](https://www.sciencedirect.com/science/article/pii/S1550413116304363?via%3Dihub).
@@ -79,8 +82,8 @@ evaluate(w_refbase_est,pseudo.seger$true_p)$all.eva
 We can obtain population-level mean proportions, with the one using [Segerstolpe et al. (2016)](https://www.sciencedirect.com/science/article/pii/S1550413116304363?via%3Dihub) as correct (`c_ave_est`) and the one using [Xin et al. (2016)](https://www.sciencedirect.com/science/article/pii/S155041311630434X?via%3Dihub) as incorrect (`w_ave_est`). The function `pop.ct.prop.subj()` is used to extract such information given subject-level proportions. We also provide the true mean proportions (`true_ave`) from the target pseudo bulk samples. Besides, MuRD also requires a list of prespecified marker genes, which could be selected from external scRNA-seq data based on pre-defined expression threshold, prior biological knowledge, or information reported in literature. The list of correct markers (`cmarkers.rds`) and the list of wrong markers (`wmarkers.rds`) for this simulation study are available in files `cmarkers.rds` and `wmarkers.rds` at [data download](https://chencxxy28.github.io/MuRD/articles/web/data.html), respectively.
 
 ```{r, message=FALSE}
-c_list_marker = readRDS("data/cmarkers.rds") #may write a function for selecting marker genes
-w_list_marker = readRDS("data/wmarkers.rds") #may write a function for selecting marker genes
+c_list_marker = readRDSFromWeb("https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/cmarkers.rds") #may write a function for selecting marker genes
+w_list_marker = readRDSFromWeb("https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/wmarkers.rds") #may write a function for selecting marker genes
 c_ave_est = pop.ct.prop.subj(c_refbase_est)
 w_ave_est = pop.ct.prop.subj(w_refbase_est)
 true_ave = pop.ct.prop.subj(pseudo.seger$true_p)
@@ -124,10 +127,10 @@ ggplot(data, aes(x= Cell_Types, y=Methods, size=MAD, color=CCC, group= Cell_Type
 ```
 
 ## Real Bulk RNA-seq Data
-Now we move forward to analyze a bulk RNA-seq data generated from pancreatic islets by [Fadista et al. (2014)](https://www.pnas.org/content/111/38/13924). We focus on 77 samples with 51 considered as healthy (hbA1C level no larger than 6) and 26 considered as having type 2 diabetes (T2D; hbA1C larger than 6). To obtain the subject-level cell type proportions, we adopted SCDC-ENSAMBLE approach, a SCDC-based method aimed to implement deconvolution via integrating multiple single-cell reference sets ([Dong et al. (2021)](https://academic.oup.com/bib/article/22/1/416/5699815)). scRNA-seq data from [Baron et al. (2016)](https://www.sciencedirect.com/science/article/pii/S2405471216302666?via%3Dihub) and [Segerstolpe et al. (2016)](https://www.sciencedirect.com/science/article/pii/S1550413116304363?via%3Dihub) are considered. To allow the potentially different gene expression patterns between the cases and controls, we implemented ENSEMBLE procedures for the samples from the two classes separately.
+Now we move forward to analyze a bulk RNA-seq data generated from pancreatic islets by [Fadista et al. (2014)](https://www.pnas.org/content/111/38/13924). We focus on 77 samples with 51 considered as healthy (hbA1C level no larger than 6) and 26 considered as having type 2 diabetes (T2D; hbA1C larger than 6). To obtain the subject-level cell type proportions, we adopted SCDC-ENSAMBLE approach, a SCDC-based method aimed to implement deconvolution via integrating multiple single-cell reference sets ([Dong et al. (2021)](https://academic.oup.com/bib/article/22/1/416/5699815)). scRNA-seq data from [Baron et al. (2016)](https://www.sciencedirect.com/science/article/pii/S2405471216302666?via%3Dihub) and [Segerstolpe et al. (2016)](https://www.sciencedirect.com/science/article/pii/S1550413116304363?via%3Dihub) are considered. To allow the potentially different gene expression patterns between the cases and controls, we implemented ENSEMBLE procedures for the samples from the two classes separately. (may take 5-10 minutes to run)
 
 ```{r, message=FALSE,results='hide'}
-fadista_77 <- readRDS("data/fadista_77.rds")
+fadista_77 <- readRDSFromWeb("https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/fadista_77.rds")
 #obtain subject-level proportions
 #for normal samples
 index_normal<-which(fadista_77@phenoData@data$hba1c_class2=="Normal")
@@ -148,7 +151,7 @@ comb_sample = prop_est
 Next, to obtain the population-level mean proportions, we applied SCDC-ENSEMBLE again to the external bulk expression data from [Bunt et al. (2015)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1005694) at [data download](https://chencxxy28.github.io/MuRD/articles/web/data.html) and then averaged subject-level proportions for each cell type (Not run). 
 
 ```{r, message=FALSE,eval=FALSE}
-Bunt <- readRDS("data/Bunt.rds")
+Bunt <- readRDSFromWeb("https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/Bunt.rds")
 colnames(Bunt@phenoData@data)[1]<-"sample"
 #obtain population-level mean proportions
 bunt.ens <- SCDC_ENSEMBLE(bulk.eset = Bunt, sc.eset.list = list(baronh = baron$sc.eset.qc, segerh = seger$sc.eset.qc), ct.varname = "cluster", sample = "sample", truep = NULL, ct.sub =  c("alpha","beta","delta","gamma","acinar","ductal"), search.length = 0.01, grid.search = T)
@@ -158,15 +161,15 @@ ave_est = pop.ct.prop.subj(prop_est_bunt)
 
 The code above may take a long time to run. We have provided the estimated cell-type proportions, named `prop_est_bunt.rds` at [data download](https://chencxxy28.github.io/MuRD/articles/web/data.html). We can directly use the estimates to calculate population-level mean proportions.
 ```{r, message=FALSE,results='hide'}
-prop_est_bunt = readRDS("data/prop_est_bunt.rds")
+prop_est_bunt = readRDSFromWeb("https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/prop_est_bunt.rds")
 ave_est = pop.ct.prop.subj(prop_est_bunt)
 ```
 
-Finally, given a list of pre-specified marker genes, named `fad_list_marker.rds` available at [data download](https://chencxxy28.github.io/MuRD/articles/web/data.html), we applied MuRD algorithm to conduct deconvolution. To allow the potentially different gene expression patterns between the cases and controls, we implemented ENSEMBLE procedures for the samples from the two classes separately (may take 5-10 minutes). 
+Finally, given a list of pre-specified marker genes, named `fad_list_marker.rds` available at [data download](https://chencxxy28.github.io/MuRD/articles/web/data.html), we applied MuRD algorithm to conduct deconvolution. To allow the potentially different gene expression patterns between the cases and controls, we implemented ENSEMBLE procedures for the samples from the two classes separately (may take 5-10 minutes to run). 
 
 ```{r, message=FALSE, results='hide'}
 #read the list of marker genes
-list_marker = readRDS('data/fad_list_marker.rds')
+list_marker = readRDSFromWeb('https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/fad_list_marker.rds')
 
 #normal samples
 MuRD.object.normal = MuRD.onegroup(bulk.data=fadista_77[,index_normal],list.marker=list_marker,celltype.unique=c("alpha","beta","delta","gamma","acinar","ductal"),subject.level.proportion=comb_sample[index_normal,],population.level.proportion=ave_est, tol=0.0001)
