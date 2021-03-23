@@ -1,11 +1,11 @@
-\name{MuRD.onegroup}
-\alias{MuRD.onegroup}
-\title{MuRD algorithm to deconvolute cell type proportions from a target bulk data}
+\name{MultiRD.onegroup}
+\alias{MultiRD.onegroup}
+\title{MultiRD algorithm to deconvolute cell type proportions from a target bulk data}
 \description{
-This is the main algorithm that MuRD is relied on to implement deconvolution.
+This is the main algorithm that MultiRD is relied on to implement deconvolution.
 }
 \usage{
-MuRD.onegroup(
+MultiRD.onegroup(
 bulk.data,
 list.marker,
 celltype.unique,

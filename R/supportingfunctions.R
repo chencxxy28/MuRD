@@ -77,17 +77,17 @@ criteria.onegroup<-function (bulk.data, prop.used)
     apply(prop_new_withscaler,2,mean)
 }
 
-#extract estimated cell type proportions via MuRD
-MuRD.predict.prop<-function(murd.output)
+#extract estimated cell type proportions via MultiRD
+MultiRD.predict.prop<-function(MultiRD.output)
 {
-    goodnessoffit<-murd.output$metrics
-    murd.output$est[[which.min(goodnessoffit)]]
+    goodnessoffit<-MultiRD.output$metrics
+    MultiRD.output$est[[which.min(goodnessoffit)]]
 }
 
 #extract estimated cell type proportions via ref-free
-reffree.predict.prop<-function(murd.output)
+reffree.predict.prop<-function(MultiRD.output)
 {
-    murd.output$est[[1]]
+    MultiRD.output$est[[1]]
 }
 
 #evaluation

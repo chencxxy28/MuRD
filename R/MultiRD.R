@@ -17,7 +17,7 @@ estimate.geneprofile<-function(bulk.data,gene.used,celltype.unique,cluster.ident
 }
 
 #iterating updating cell type proportions and gene mean profiles
-MuRD.onegroup<-function (bulk.data,list.marker,celltype.unique,subject.level.proportion,population.level.proportion,proportion.sd=1,lambda.option=c(seq(from=0,to=0.075,length=15),10,50,100,500,1000),tol=0.001,iter.num=1000){
+MultiRD.onegroup<-function (bulk.data,list.marker,celltype.unique,subject.level.proportion,population.level.proportion,proportion.sd=1,lambda.option=c(seq(from=0,to=0.075,length=15),10,50,100,500,1000),tol=0.001,iter.num=1000){
     #construct test set for evaluation
     #bulk.eset<-bulk.data
     #bulk_data<-(exprs(bulk.eset))

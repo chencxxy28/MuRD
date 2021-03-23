@@ -1,5 +1,5 @@
-title: MuRD
-url: https://chencxxy28.github.io/MuRD/
+title: MultiRD
+url: https://chencxxy28.github.io/MultiRD/
 template:
   params:
     bootswatch: cosmo
@@ -10,7 +10,7 @@ navbar:
     - icon: fa-home
       href: index.html
     - text: "Vignettes"
-      href: articles/MuRD.html
+      href: articles/MultiRD.html
     - text: "References"
       href: reference/index.html
     - text: "Data"

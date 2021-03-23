@@ -1,8 +1,8 @@
 ---
-title: "MuRD"
+title: "MultiRD"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{MuRD}
+  %\VignetteIndexEntry{MultiRD}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -10,14 +10,14 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-**MuRD** unifies multiple deconvolution schemes to infer cell type proportions from the target bulk RNA-seq data. Three unique features are embraced in this algorithm: first, **MuRD** is able to incorporate extra biological information from external data sources enables (e.g., scRNA_seq and other bulk RNA_seq data from independent studies); second, **MuRD** calibrates the reference-free algorithm by taking into account the proportion estimates from a reference-based approach; third, **MuRD** is robust to incorrect information from any of the provided data sources.
+**MultiRD** unifies multiple deconvolution schemes to infer cell type proportions from the target bulk RNA-seq data. Three unique features are embraced in this algorithm: first, **MultiRD** is able to incorporate extra biological information from external data sources enables (e.g., scRNA_seq and other bulk RNA_seq data from independent studies); second, **MultiRD** calibrates the reference-free algorithm by taking into account the proportion estimates from a reference-based approach; third, **MultiRD** is robust to incorrect information from any of the provided data sources.
 
 ## Installation
 ```{r,eval=FALSE}
 if (!require("devtools")) {
   install.packages("devtools")
 }
-devtools::install_github("chencxxy28/MuRD")
+devtools::install_github("chencxxy28/MultiRD")
 ```
 
 In this tutorial, we use SCDC ([Dong et al. (2021)](https://academic.oup.com/bib/article/22/1/416/5699815)) for illustration to conduct reference-based deconvolution. The package can be installed by the code
@@ -31,12 +31,12 @@ devtools::install_github("meichendong/SCDC")
 
 ```{r}
 #load
-library(MuRD)
+library(MultiRD)
 library(SCDC)
 ```
 
 ## Data Input
-**MuRD** deconvolutes raw read counts data which is in `ExpressionSet` objects based on the package [_Biobase_](https://bioconductor.org/packages/release/bioc/html/Biobase.html). As an illustration of the **MuRD** framework, we conduct both simulation studies and real data analysis based on pancreatic islet data from [Fadista et al. (2014)](https://www.pnas.org/content/111/38/13924) as presented in our paper. Three public scRNA-seq datasets from [Baron et al. (2016)](https://www.sciencedirect.com/science/article/pii/S2405471216302666?via%3Dihub), [Segerstolpe et al. (2016)](https://www.sciencedirect.com/science/article/pii/S1550413116304363?via%3Dihub) and [Xin et al. (2016)](https://www.sciencedirect.com/science/article/pii/S155041311630434X?via%3Dihub) are used. For simulations, we have a pre-specified [correct](https://github.com/chencxxy28/MuRD/blob/master/vignettes/data/cmarkers.rds) and [incorrect](https://github.com/chencxxy28/MuRD/blob/master/vignettes/data/wmarkers.rds) marker genes; for real data application, we have an expression dataset from [Bunt et al. (2015)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1005694) and pre-selected list of [marker genes](https://github.com/chencxxy28/MuRD/blob/master/vignettes/data/fad_list_marker.rds). All processed data are available at the [data download](https://chencxxy28.github.io/MuRD/articles/web/data.html).
+**MultiRD** deconvolutes raw read counts data which is in `ExpressionSet` objects based on the package [_Biobase_](https://bioconductor.org/packages/release/bioc/html/Biobase.html). As an illustration of the **MultiRD** framework, we conduct both simulation studies and real data analysis based on pancreatic islet data from [Fadista et al. (2014)](https://www.pnas.org/content/111/38/13924) as presented in our paper. Three public scRNA-seq datasets from [Baron et al. (2016)](https://www.sciencedirect.com/science/article/pii/S2405471216302666?via%3Dihub), [Segerstolpe et al. (2016)](https://www.sciencedirect.com/science/article/pii/S1550413116304363?via%3Dihub) and [Xin et al. (2016)](https://www.sciencedirect.com/science/article/pii/S155041311630434X?via%3Dihub) are used. For simulations, we have a pre-specified [correct](https://github.com/chencxxy28/MultiRD/blob/master/vignettes/data/cmarkers.rds) and [incorrect](https://github.com/chencxxy28/MultiRD/blob/master/vignettes/data/wmarkers.rds) marker genes; for real data application, we have an expression dataset from [Bunt et al. (2015)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1005694) and pre-selected list of [marker genes](https://github.com/chencxxy28/MultiRD/blob/master/vignettes/data/fad_list_marker.rds). All processed data are available at the [data download](https://chencxxy28.github.io/MultiRD/articles/web/data.html).
 
 ## Simulation Studies
 First, read in scRNA-seq data from our website 
@@ -58,7 +58,7 @@ pseudo.seger<-generateBulk(seger[["sc.eset.qc"]], ct.varname = "cluster", sample
 
 The generated _pseudo bulk_ object contains a matrix of true cell type proportions (`pseudo.seger$truep`) and the `ExpressionSet` object (`pseudo.seger$pseudo_eset`).
 
-MuRD algorithm takes as input the target bulk data, subject-level cell type proportions from reference-based approach, and population-level cell type proportions. For illustration, we use the function `SCDC_prop()` from SCDC package ([Dong et al. (2021)](https://academic.oup.com/bib/article/22/1/416/5699815)). We regard the estimated cell type proportions from [Segerstolpe et al. (2016)](https://www.sciencedirect.com/science/article/pii/S1550413116304363?via%3Dihub) as the correct subject-level cell type information (`c_refbase_est`) and the estimated ones with subject-label shuffle from [Xin et al. (2016)](https://www.sciencedirect.com/science/article/pii/S155041311630434X?via%3Dihub) as the incorrect information (`w_refbase_est`). 
+MultiRD algorithm takes as input the target bulk data, subject-level cell type proportions from reference-based approach, and population-level cell type proportions. For illustration, we use the function `SCDC_prop()` from SCDC package ([Dong et al. (2021)](https://academic.oup.com/bib/article/22/1/416/5699815)). We regard the estimated cell type proportions from [Segerstolpe et al. (2016)](https://www.sciencedirect.com/science/article/pii/S1550413116304363?via%3Dihub) as the correct subject-level cell type information (`c_refbase_est`) and the estimated ones with subject-label shuffle from [Xin et al. (2016)](https://www.sciencedirect.com/science/article/pii/S155041311630434X?via%3Dihub) as the incorrect information (`w_refbase_est`). 
 
 ```{r, message=FALSE,results='hide'}
 set.seed(1234567)
@@ -79,7 +79,7 @@ evaluate(c_refbase_est,pseudo.seger$true_p)$all.eva
 evaluate(w_refbase_est,pseudo.seger$true_p)$all.eva
 ```
 
-We can obtain population-level mean proportions, with the one using [Segerstolpe et al. (2016)](https://www.sciencedirect.com/science/article/pii/S1550413116304363?via%3Dihub) as correct (`c_ave_est`) and the one using [Xin et al. (2016)](https://www.sciencedirect.com/science/article/pii/S155041311630434X?via%3Dihub) as incorrect (`w_ave_est`). The function `pop.ct.prop.subj()` is used to extract such information given subject-level proportions. We also provide the true mean proportions (`true_ave`) from the target pseudo bulk samples. Besides, MuRD also requires a list of prespecified marker genes, which could be selected from external scRNA-seq data based on pre-defined expression threshold, prior biological knowledge, or information reported in literature. The list of correct markers (`cmarkers.rds`) and the list of wrong markers (`wmarkers.rds`) for this simulation study are available in files `cmarkers.rds` and `wmarkers.rds` at [data download](https://chencxxy28.github.io/MuRD/articles/web/data.html), respectively.
+We can obtain population-level mean proportions, with the one using [Segerstolpe et al. (2016)](https://www.sciencedirect.com/science/article/pii/S1550413116304363?via%3Dihub) as correct (`c_ave_est`) and the one using [Xin et al. (2016)](https://www.sciencedirect.com/science/article/pii/S155041311630434X?via%3Dihub) as incorrect (`w_ave_est`). The function `pop.ct.prop.subj()` is used to extract such information given subject-level proportions. We also provide the true mean proportions (`true_ave`) from the target pseudo bulk samples. Besides, MultiRD also requires a list of prespecified marker genes, which could be selected from external scRNA-seq data based on pre-defined expression threshold, prior biological knowledge, or information reported in literature. The list of correct markers (`cmarkers.rds`) and the list of wrong markers (`wmarkers.rds`) for this simulation study are available in files `cmarkers.rds` and `wmarkers.rds` at [data download](https://chencxxy28.github.io/MultiRD/articles/web/data.html), respectively.
 
 ```{r, message=FALSE}
 c_list_marker = readRDSFromWeb("https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/cmarkers.rds") #may write a function for selecting marker genes
@@ -95,21 +95,21 @@ c_ave_est
 w_ave_est
 ```
 
-Finally, we integrate all information into MuRD algorithm to conduct deconvolution for the _pseudo bulk_ data. For illustration, we focus on the case with wrong marker genes (W), wrong subject-level proportions (W), and correct population-level mean proportions (R). The function `MuRD.onegroup()` will return a list containing estimated cell type proportions corresponding to each tuning value (`est.prop`) and a sequence of goodness-of-fit values corresponding to  each tuning value (`metrics`). The smaller the better. 
+Finally, we integrate all information into MultiRD algorithm to conduct deconvolution for the _pseudo bulk_ data. For illustration, we focus on the case with wrong marker genes (W), wrong subject-level proportions (W), and correct population-level mean proportions (R). The function `MultiRD.onegroup()` will return a list containing estimated cell type proportions corresponding to each tuning value (`est.prop`) and a sequence of goodness-of-fit values corresponding to  each tuning value (`metrics`). The smaller the better. 
 
 ```{r, message=FALSE, results='hide'}
-MuRD.object<-MuRD.onegroup(bulk.data=pseudo.seger[["pseudo_eset"]],list.marker=w_list_marker,celltype.unique=c("alpha","beta","delta","gamma"),subject.level.proportion=w_refbase_est,population.level.proportion=c_ave_est)
+MultiRD.object<-MultiRD.onegroup(bulk.data=pseudo.seger[["pseudo_eset"]],list.marker=w_list_marker,celltype.unique=c("alpha","beta","delta","gamma"),subject.level.proportion=w_refbase_est,population.level.proportion=c_ave_est)
 ```
 
-The function `MuRD.predict.props()` helps extract the recovered cell type proportions via MuRD; the function `reffree.predict.prop()` helps extract the estimated proportions via reference-free approach. We use the function `evaluate` to assess the performance of estimated proportions versus the true proportions based on MAD, CCC, and Pearson. We also provide the visualization via a dot plot using MAD and CCC. The following results show that our method (named MuRD) has smaller MAD and higher CCC and Pearson than other methods even when misleading information is used.
+The function `MultiRD.predict.props()` helps extract the recovered cell type proportions via MultiRD; the function `reffree.predict.prop()` helps extract the estimated proportions via reference-free approach. We use the function `evaluate` to assess the performance of estimated proportions versus the true proportions based on MAD, CCC, and Pearson. We also provide the visualization via a dot plot using MAD and CCC. The following results show that our method (named MultiRD) has smaller MAD and higher CCC and Pearson than other methods even when misleading information is used.
 
 ```{r, message=FALSE}
-MuRD.est = MuRD.predict.prop(murd.output=MuRD.object)
-reffree.est = reffree.predict.prop(murd.output=MuRD.object)
+MultiRD.est = MultiRD.predict.prop(MultiRD.output=MultiRD.object)
+reffree.est = reffree.predict.prop(MultiRD.output=MultiRD.object)
 ```
 
 ```{r, message=FALSE}
-evaluate(MuRD.est,pseudo.seger$true_p)$all.eva
+evaluate(MultiRD.est,pseudo.seger$true_p)$all.eva
 evaluate(reffree.est,pseudo.seger$true_p)$all.eva
 evaluate(w_refbase_est,pseudo.seger$true_p)$all.eva
 ```
@@ -117,12 +117,12 @@ evaluate(w_refbase_est,pseudo.seger$true_p)$all.eva
 ```{r, message=FALSE}
 library(reshape2)
 library(ggplot2)
-data = as.data.frame(cbind(Methods= c("MuRD","Ref-free","SCDC","MuRD","Ref-free","SCDC","MuRD","Ref-free","SCDC","MuRD","Ref-free","SCDC"), Cell_Types=c("Alpha","Alpha","Alpha","Beta","Beta","Beta", "Delta","Delta","Delta","Gamma","Gamma","Gamma")))
-MuRD_results = evaluate(MuRD.est,pseudo.seger$true_p)$cell.type.eva
+data = as.data.frame(cbind(Methods= c("MultiRD","Ref-free","SCDC","MultiRD","Ref-free","SCDC","MultiRD","Ref-free","SCDC","MultiRD","Ref-free","SCDC"), Cell_Types=c("Alpha","Alpha","Alpha","Beta","Beta","Beta", "Delta","Delta","Delta","Gamma","Gamma","Gamma")))
+MultiRD_results = evaluate(MultiRD.est,pseudo.seger$true_p)$cell.type.eva
 reffree_results = evaluate(reffree.est,pseudo.seger$true_p)$cell.type.eva
 SCDC_results = evaluate(w_refbase_est,pseudo.seger$true_p)$cell.type.eva
-data$MAD = c(rbind(MuRD_results$ct.mad,reffree_results$ct.mad,SCDC_results$ct.mad))
-data$CCC = c(rbind(MuRD_results$ct.ccc,reffree_results$ct.ccc,SCDC_results$ct.ccc))
+data$MAD = c(rbind(MultiRD_results$ct.mad,reffree_results$ct.mad,SCDC_results$ct.mad))
+data$CCC = c(rbind(MultiRD_results$ct.ccc,reffree_results$ct.ccc,SCDC_results$ct.ccc))
 ggplot(data, aes(x= Cell_Types, y=Methods, size=MAD, color=CCC, group= Cell_Types)) + geom_point(alpha = 0.8) + theme_classic() + scale_color_gradient(low = "yellow2",  high = "blue", space = "Lab", limit = c(-0.001, 0.5)) + scale_size(range = c(2, 10))+ ggtitle("WWR")+ theme(text = element_text(size=15),plot.title = element_text(hjust = 0.5))
 ```
 
@@ -148,7 +148,7 @@ prop_est = prop_est[match(colnames(fadista_77),rownames(prop_est)),]
 comb_sample = prop_est
 ```
 
-Next, to obtain the population-level mean proportions, we applied SCDC-ENSEMBLE again to the external bulk expression data from [Bunt et al. (2015)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1005694) at [data download](https://chencxxy28.github.io/MuRD/articles/web/data.html) and then averaged subject-level proportions for each cell type (Not run). 
+Next, to obtain the population-level mean proportions, we applied SCDC-ENSEMBLE again to the external bulk expression data from [Bunt et al. (2015)](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1005694) at [data download](https://chencxxy28.github.io/MultiRD/articles/web/data.html) and then averaged subject-level proportions for each cell type (Not run). 
 
 ```{r, message=FALSE,eval=FALSE}
 Bunt <- readRDSFromWeb("https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/Bunt.rds")
@@ -159,32 +159,32 @@ prop_est_bunt<-wt_prop(bunt.ens$w_table[7,1:2], proplist = bunt.ens$prop.only)
 ave_est = pop.ct.prop.subj(prop_est_bunt)
 ```
 
-The code above may take a long time to run. We have provided the estimated cell-type proportions, named `prop_est_bunt.rds` at [data download](https://chencxxy28.github.io/MuRD/articles/web/data.html). We can directly use the estimates to calculate population-level mean proportions.
+The code above may take a long time to run. We have provided the estimated cell-type proportions, named `prop_est_bunt.rds` at [data download](https://chencxxy28.github.io/MultiRD/articles/web/data.html). We can directly use the estimates to calculate population-level mean proportions.
 ```{r, message=FALSE,results='hide'}
 prop_est_bunt = readRDSFromWeb("https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/prop_est_bunt.rds")
 ave_est = pop.ct.prop.subj(prop_est_bunt)
 ```
 
-Finally, given a list of pre-specified marker genes, named `fad_list_marker.rds` available at [data download](https://chencxxy28.github.io/MuRD/articles/web/data.html), we applied MuRD algorithm to conduct deconvolution. To allow the potentially different gene expression patterns between the cases and controls, we implemented ENSEMBLE procedures for the samples from the two classes separately (may take 5-10 minutes to run). 
+Finally, given a list of pre-specified marker genes, named `fad_list_marker.rds` available at [data download](https://chencxxy28.github.io/MultiRD/articles/web/data.html), we applied MultiRD algorithm to conduct deconvolution. To allow the potentially different gene expression patterns between the cases and controls, we implemented ENSEMBLE procedures for the samples from the two classes separately (may take 5-10 minutes to run). 
 
 ```{r, message=FALSE, results='hide'}
 #read the list of marker genes
 list_marker = readRDSFromWeb('https://github.com/chencxxy28/MuRD/raw/master/vignettes/data/fad_list_marker.rds')
 
 #normal samples
-MuRD.object.normal = MuRD.onegroup(bulk.data=fadista_77[,index_normal],list.marker=list_marker,celltype.unique=c("alpha","beta","delta","gamma","acinar","ductal"),subject.level.proportion=comb_sample[index_normal,],population.level.proportion=ave_est, tol=0.0001)
-prop.est.normal.MuRD = MuRD.predict.prop(murd.output=MuRD.object.normal)
-prop.est.normal.reffree = reffree.predict.prop(murd.output=MuRD.object.normal)
+MultiRD.object.normal = MultiRD.onegroup(bulk.data=fadista_77[,index_normal],list.marker=list_marker,celltype.unique=c("alpha","beta","delta","gamma","acinar","ductal"),subject.level.proportion=comb_sample[index_normal,],population.level.proportion=ave_est, tol=0.0001)
+prop.est.normal.MultiRD = MultiRD.predict.prop(MultiRD.output=MultiRD.object.normal)
+prop.est.normal.reffree = reffree.predict.prop(MultiRD.output=MultiRD.object.normal)
 
 #diseased samples
-MuRD.object.nnormal = MuRD.onegroup(bulk.data=fadista_77[,index_nnormal],list.marker=list_marker,celltype.unique=c("alpha","beta","delta","gamma","acinar","ductal"),subject.level.proportion=comb_sample[index_nnormal,],population.level.proportion=ave_est, tol=0.0001)
-prop.est.nnormal.MuRD = MuRD.predict.prop(murd.output=MuRD.object.nnormal)
-prop.est.nnormal.reffree = reffree.predict.prop(murd.output=MuRD.object.nnormal)
+MultiRD.object.nnormal = MultiRD.onegroup(bulk.data=fadista_77[,index_nnormal],list.marker=list_marker,celltype.unique=c("alpha","beta","delta","gamma","acinar","ductal"),subject.level.proportion=comb_sample[index_nnormal,],population.level.proportion=ave_est, tol=0.0001)
+prop.est.nnormal.MultiRD = MultiRD.predict.prop(MultiRD.output=MultiRD.object.nnormal)
+prop.est.nnormal.reffree = reffree.predict.prop(MultiRD.output=MultiRD.object.nnormal)
 
-#combine two groups for MuRD
-MuRD.est<-comb_sample
-MuRD.est[index_normal,]<-prop.est.normal.MuRD
-MuRD.est[index_nnormal,]<-prop.est.nnormal.MuRD
+#combine two groups for MultiRD
+MultiRD.est<-comb_sample
+MultiRD.est[index_normal,]<-prop.est.normal.MultiRD
+MultiRD.est[index_nnormal,]<-prop.est.nnormal.MultiRD
 
 #combine two groups for reffree
 reffree.est<-comb_sample
@@ -192,11 +192,11 @@ reffree.est[index_normal,]<-prop.est.normal.reffree
 reffree.est[index_nnormal,]<-prop.est.nnormal.reffree
 ```
 
-To compare the results from MuRD to other methods, we visualize the estimated proportions as follows:
+To compare the results from MultiRD to other methods, we visualize the estimated proportions as follows:
 
 ```{r, message=FALSE, results='hide'}
-MuRD.est = as.data.frame(MuRD.est)
-MuRD.est$id = rownames(MuRD.est)
+MultiRD.est = as.data.frame(MultiRD.est)
+MultiRD.est$id = rownames(MultiRD.est)
 reffree.est = as.data.frame(reffree.est)
 reffree.est$id = rownames(reffree.est)
 SCDC.est = comb_sample
@@ -204,15 +204,15 @@ SCDC.est = as.data.frame(SCDC.est)
 SCDC.est$id = rownames(SCDC.est)
 Groups = fadista_77@phenoData@data$hba1c_class2
 Groups = as.data.frame(Groups)
-Groups$id = rownames(MuRD.est)
+Groups$id = rownames(MultiRD.est)
 
-est_murd<-melt(data = MuRD.est, id.vars = c("id"))
+est_MultiRD<-melt(data = MultiRD.est, id.vars = c("id"))
 est_scdc<-melt(data = SCDC.est, id.vars = c("id"))
 est_reffree<-melt(data = reffree.est, id.vars = c("id"))
-colnames(est_murd)<-colnames(est_scdc)<- colnames(est_reffree)<-c("id", "Cell", "value" )
-plot.data<-rbind(est_murd,est_scdc,est_reffree)
+colnames(est_MultiRD)<-colnames(est_scdc)<- colnames(est_reffree)<-c("id", "Cell", "value" )
+plot.data<-rbind(est_MultiRD,est_scdc,est_reffree)
 
-plot.data$Methods<-c(rep("MuRD",462),rep("SCDC",462), rep("Ref-free",462))
+plot.data$Methods<-c(rep("MultiRD",462),rep("SCDC",462), rep("Ref-free",462))
 plot.data<-merge(plot.data,Groups,by="id")
 plot.data$order<-ifelse(plot.data$Groups=="Normal",1,2)
 plot.data<-plot.data[order(plot.data$order),]
@@ -227,7 +227,7 @@ ggplot(data=plot.data,aes(x=Methods, y=value)) +
   scale_fill_discrete(name="Methods", guide = FALSE)
 ```
 
-To evaluate the negative correlation between HbA1c levels and the beta cell functions, we constructed a generalized additive model using the estimated beta cell-type proportions as responses, some covariates (age, BMI, gender) as linear effects, and HbA1c as non-linear effect. The results from MuRD are presented as follows.
+To evaluate the negative correlation between HbA1c levels and the beta cell functions, we constructed a generalized additive model using the estimated beta cell-type proportions as responses, some covariates (age, BMI, gender) as linear effects, and HbA1c as non-linear effect. The results from MultiRD are presented as follows.
 
 ```{r, message=FALSE, results='hide'}
 library(mgcv)
@@ -237,13 +237,13 @@ age<-fadista_77@phenoData@data[["age"]]
 bmi<-fadista_77@phenoData@data[["bmi"]]
 gender<-fadista_77@phenoData@data[["gender"]]
 hba1c<-fadista_77@phenoData@data[["hba1c"]]
-fit_gam<-gam(MuRD.est[,'beta']~age+bmi+gender+s(hba1c),family=betar(link="logit"))
+fit_gam<-gam(MultiRD.est[,'beta']~age+bmi+gender+s(hba1c),family=betar(link="logit"))
 data_predict<-data.frame(age=0,bmi=0,gender="Female",hba1c=hba1c)
 
 #plot
-fit_plot<-gam(MuRD.est[,'beta']~s(hba1c),family=betar(link="logit"))
+fit_plot<-gam(MultiRD.est[,'beta']~s(hba1c),family=betar(link="logit"))
 Groups<-ifelse(hba1c<=6,"Normal","T2D")
-data_plot<-data.frame(Cell_proportions=MuRD.est[,'beta'],hbaic=fadista_77@phenoData@data[["hba1c"]],fitted=fitted(fit_plot))
+data_plot<-data.frame(Cell_proportions=MultiRD.est[,'beta'],hbaic=fadista_77@phenoData@data[["hba1c"]],fitted=fitted(fit_plot))
 nice_plot<-ggplot(data=data_plot,aes(x = hbaic, y = Cell_proportions))+ylim(0,0.7)+geom_point(size=1.8,aes(shape = Groups,color=Groups))+geom_line(aes(y = fitted), size = 1, color="darkgreen")+xlab("HbA1c")+ylab("Beta Cell Proportions")+ theme(text = element_text(size=15),legend.position = "none")
 nice_plot
 ```

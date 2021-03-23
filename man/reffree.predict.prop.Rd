@@ -5,10 +5,10 @@
 To extract optimal cell type proportions via reference-free algorithm
 }
 \usage{
-reffree.predict.prop(murd.output)
+reffree.predict.prop(MultiRD.output)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{murd.output}{An object from reffree.onegroup}
+  \item{MultiRD.output}{An object from reffree.onegroup}
 }
 \value{Estimated cell type proportions via reffree}
